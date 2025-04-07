@@ -20,7 +20,7 @@ properties([
       stage('Build Stage Production') {
         ansiColor('xterm') {
           try {
-              sh("docker build -t ${SERVICE_NAME} .")
+              sh("cd app;docker build -t ${SERVICE_NAME} .")
           } catch(Exception e) {
               currentBuild.result = 'FAILURE'
               throw e
