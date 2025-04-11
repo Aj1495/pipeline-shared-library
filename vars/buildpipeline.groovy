@@ -6,8 +6,7 @@ def call(String masterBuild) {
   podTemplate(
     label: 'jenkins-agent',
     containers: [
-      containerTemplate(name: 'jnlp', image: 'jenkins/inbound-agent', args: '${computer.jnlpmac} ${computer.name}'),
-      containerTemplate(name: 'docker', image: 'docker:24.0.7', command: 'cat', ttyEnabled: true)
+      containerTemplate(name: 'docker', image: 'docker:20.10.8', command: 'cat', ttyEnabled: true)
     ]
   ) {
     node('jenkins-agent') {
