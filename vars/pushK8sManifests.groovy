@@ -3,7 +3,7 @@ def call(String serviceName, String branchName) {
     ansiColor('xterm') {
       withCredentials([
         usernamePassword(
-          credentailsId: 'gitCreds',
+          credentailsId: '1360ab06-c1b5-4bc8-bc4d-89977f8400cf',
           usernameVariable: 'GIT_USER',
           passwordVariable: 'GIT_PASS'
         )
