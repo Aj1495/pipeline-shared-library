@@ -1,7 +1,7 @@
 def call(String masterBuild) {
   def git_app_repo = scm.userRemoteConfigs[0].url
   def SERVICE_NAME = scm.getUserRemoteConfigs()[0].getUrl().tokenize('/').last().split("\\.")[0]
-  def git_app_branch = "${env.BRANCH_NAME}"
+  def git_app_branch = "main"
 
   node() {
     properties([
