@@ -10,7 +10,6 @@ def call(String masterBuild) {
     ])
 
     stage('CleanWorkspace') {
-      cleanWs()
       sh 'whoami && pwd'
     }
 
