@@ -1,17 +1,31 @@
-def call(String serviceName) {
-  ansiColor('xterm') {
-    try {
-      echo "Pushing Docker image: ${serviceName}"
-      withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-        sh """
-          echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-          docker tag ${serviceName} ${DOCKER_USER}/${serviceName}:latest
-          docker push ${DOCKER_USER}/${serviceName}:latest
-        """
+def call(String serviceName, String branchName) {
+  stage('Docker Push') {
+    ansiColor('xterm') {
+      withCredentials([
+        usernamePassword(
+          credentialsId: 'dockerCreds',
+          usernameVariable: 'DOCKER_USER',
+          passwordVariable: 'DOCKER_PASS'
+        )
+      ]) {
+        def imageTag = "${serviceName}:${env.BUILD_NUMBER}"
+
+        try {
+          sh """ 
+          echo "Logging into Docker Registry for push..."
+          docker login -u \$DOCKER_USER -p \$DOCKER_PASS
+
+          echo "Tagging image as ${imageTag}"
+          docker tag ${serviceName} ${imageTag}
+
+          echo "Pushing Docker image: ${imageTag}"
+          docker push ${imageTag}
+          """
+        } catch (Exception e) {
+          ecurrentBuild.result = 'FAILURE'
+          throw e
+        }
       }
-    } catch (Exception e) {
-      currentBuild.result = 'FAILURE'
-      throw e
     }
   }
 }
