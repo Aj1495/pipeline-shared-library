@@ -10,6 +10,8 @@ def call(String serviceName, String branchName) {
       ]) {
         try {
           sh """
+            echo "Installing docker command"
+            apt install docker.io
             echo "Logging into Docker Registry..."
             docker login -u \$DOCKER_USER -p \$DOCKER_PASS
           """
