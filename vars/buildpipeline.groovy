@@ -42,11 +42,15 @@ def call(String masterBuild) {
       */
 
       stage('Build Docker Image') {
-        dockerBuild(SERVICE_NAME, git_app_branch)
+        container('docker') {
+          dockerBuild(SERVICE_NAME, git_app_branch)
+        }
       }
 
       stage('Push Docker Image') {
-        dockerPush(SERVICE_NAME, git_app_branch)
+        container('docker') {
+          dockerPush(SERVICE_NAME, git_app_branch)
+        }
       }
 
       stage('Helm Create Manifests') {
