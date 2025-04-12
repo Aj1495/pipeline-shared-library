@@ -15,12 +15,10 @@ def call(String serviceName, String branchName) {
           """
           if (branchName in ["staging", "preprod", "production", "master"]) {
             echo "Building Docker image for production like environment ... "
-            sh "docker build -t ${serviceName} ."
-            // if there's an 'app' subdirectory or second Dockerfile
-            sh "cd app && docker build -t ${serviceName} ."
+            sh "docker build -t ${serviceName} ./app"
           } else {
             echo "Building Docker image for non-production environment... "
-            sh "docker build -t ${serviceName} ."
+            sh "docker build -t ${serviceName} ./app"
           }
         
         } catch (Exception e) {
