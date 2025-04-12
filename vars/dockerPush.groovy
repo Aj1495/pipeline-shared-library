@@ -22,7 +22,7 @@ def call(String serviceName, String branchName) {
           docker push ${imageTag}
           """
         } catch (Exception e) {
-          ecurrentBuild.result = 'FAILURE'
+          currentBuild.result = 'FAILURE'
           throw e
         }
       }
