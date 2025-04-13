@@ -8,7 +8,7 @@ def call(String serviceName, String branchName) {
           passwordVariable: 'DOCKER_PASS'
         )
       ]) {
-        def imageTag = "${serviceName}:${env.BUILD_NUMBER}"
+        def imageTag = "${DOCKER_USER}/${serviceName}:${env.BUILD_NUMBER}"
 
         try {
           sh """ 
