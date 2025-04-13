@@ -13,8 +13,12 @@ def call(String masterBuild) {
         ttyEnabled: true,
         envVars: [
           envVar(key: 'DOCKER_HOST', value: 'tcp://localhost:2375'),
-          envVar(key: 'DOCKER_TLS_CERTDIR', value: '')
-        ]
+          envVar(key: 'DOCKER_TLS_CERTDIR', value: ''),
+      containerTemplate(
+        name: 'helm',
+        image: 'alpine/helm:3.13.0',
+        command: 'cat',
+        ttyEnabled: true,
       ),
       containerTemplate(
         name: 'dind-daemon',
@@ -72,7 +76,9 @@ def call(String masterBuild) {
       }
 
       stage('Helm Create Manifests') {
-        createHelmManifests(SERVICE_NAME, git_app_branch)
+        container('helm') {
+          createHelmManifests(SERVICE_NAME, git_app_branch)
+        }
       }
 
       stage('Push Kubernetes Manifests') {
