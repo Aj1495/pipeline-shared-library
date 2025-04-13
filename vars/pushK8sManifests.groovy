@@ -14,7 +14,7 @@ def call(String serviceName, String branchName) {
 
             rm -rf k8s-manifests-repo
             git clone https://\$GIT_USER:\$GIT_TOKEN@github.com/skswami91/k8s-manifests-2025.git k8s-manifests-repo
-            cp -r helm_charts/${serviceName} k8s-manifests-repo/${serviceName}
+            cp -r helm_charts/${serviceName}/* k8s-manifests-repo/${serviceName}/
             cd k8s-manifests-repo
             git config --global user.email skswami91@gmail.com
             git config --global user.name skswami91
