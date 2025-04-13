@@ -16,7 +16,7 @@ def call(String serviceName, String branchName) {
 
             #Example: clone your separate manifests repo
             rm -rf k8s-manifests-repo
-            git clone https://\$GIT_USER:\$GIT_PASS@github.com/skswami91/k8s-manifests.git k8s-manifests-repo
+            git clone https://\$GIT_USER:\$GIT_PASS@github.com/skswami91/k8s-manifests-2025.git k8s-manifests-repo
 
             #Copy or move Helm output to that repo
             cp -r helm_charts/${serviceName} k8s-manifests-repo/${serviceName}
