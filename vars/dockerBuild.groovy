@@ -14,14 +14,6 @@ def call(String serviceName, String branchName) {
             docker login -u \$DOCKER_USER -p \$DOCKER_PASS
           """
 
-          echo "Waiting for Docker daemon to be ready..."
-          sh '''
-            for i in {1..10}; do
-              docker info && break
-              echo "Docker daemon not ready yet... retrying in 3s"
-              sleep 3
-            done
-          '''
  
           if (branchName in ["staging", "preprod", "production", "master"]) {
             echo "Building Docker image for production like environment ... "
