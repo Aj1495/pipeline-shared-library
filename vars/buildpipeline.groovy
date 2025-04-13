@@ -16,6 +16,7 @@ def call(String masterBuild) {
           envVar(key: 'DOCKER_TLS_CERTDIR', value: '')
         ]
       ),
+      containerTemplate(name: 'helm', image: 'alpine/helm:3.13.0', command: 'cat', ttyEnabled: true),
       containerTemplate(
         name: 'dind-daemon',
         image: 'docker:20.10.8-dind',
