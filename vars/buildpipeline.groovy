@@ -11,6 +11,13 @@ def call(String masterBuild) {
         image: 'docker:20.10.8',
         command: 'cat',
         ttyEnabled: true,
+        volumeMounts: [
+        // Mount the Docker socket into the container
+          volumeMount(
+            mountPath: '/var/run/docker.sock',
+            name: 'docker-socket'
+          )
+        ],
         envVars: [
           envVar(key: 'DOCKER_HOST', value: 'tcp://localhost:2375'),
           envVar(key: 'DOCKER_TLS_CERTDIR', value: '')
@@ -27,7 +34,15 @@ def call(String masterBuild) {
         image: 'docker:20.10.8-dind',
         privileged: true,
         args: '--host tcp://0.0.0.0:2375 --host unix:///var/run/docker.sock',
+        volumeMounts: [
+        // Mount the Docker socket into the container
+          volumeMount(
+            mountPath: '/var/run/docker.sock',
+            name: 'docker-socket'
+          )
+        ],
         envVars: [
+          envVar(key: 'DOCKER_HOST', value: 'tcp://localhost:2375'),
           envVar(key: 'DOCKER_TLS_CERTDIR', value: '')
         ]
       )
