@@ -3,54 +3,47 @@ def call(String masterBuild) {
   def SERVICE_NAME = scm.getUserRemoteConfigs()[0].getUrl().tokenize('/').last().split("\\.")[0]
   def git_app_branch = "main"
 
-  podTemplate(
-    label: 'jenkins-agent',
-    containers: [
-      containerTemplate(
-        name: 'docker',
-        image: 'docker:20.10.8',
-        command: 'cat',
-        ttyEnabled: true,
-        volumeMounts: [
-        // Mount the Docker socket into the container
-          volumeMount(
-            mountPath: '/var/run/docker.sock',
-            name: 'docker-socket'
-          )
-        ],
-        envVars: [
-          envVar(key: 'DOCKER_HOST', value: 'tcp://localhost:2375'),
-          envVar(key: 'DOCKER_TLS_CERTDIR', value: '')
-        ] // <-- FIXED: closed the envVars list properly here
-      ),
-      containerTemplate(
-        name: 'helm',
-        image: 'alpine/helm:3.13.0',
-        command: 'cat',
-        ttyEnabled: true,
-      ),
-      containerTemplate(
-        name: 'dind-daemon',
-        image: 'docker:20.10.8-dind',
-        privileged: true,
-        args: '--host tcp://0.0.0.0:2375 --host unix:///var/run/docker.sock',
-        volumeMounts: [
-        // Mount the Docker socket into the container
-          volumeMount(
-            mountPath: '/var/run/docker.sock',
-            name: 'docker-socket'
-          )
-        ],
-        envVars: [
-          envVar(key: 'DOCKER_HOST', value: 'tcp://localhost:2375'),
-          envVar(key: 'DOCKER_TLS_CERTDIR', value: '')
-        ]
-      )
-    ],
-    volumes: [
-      emptyDirVolume(mountPath: '/var/lib/docker', memory: false)
-    ]
-  ) {
+podTemplate(
+  label: 'jenkins-agent',
+  containers: [
+    containerTemplate(
+      name: 'docker',
+      image: 'docker:20.10.8',
+      command: 'cat',
+      ttyEnabled: true,
+      volumeMounts: [
+        [mountPath: '/var/run/docker.sock', name: 'docker-socket']
+      ],
+      envVars: [
+        envVar(key: 'DOCKER_HOST', value: 'tcp://localhost:2375'),
+        envVar(key: 'DOCKER_TLS_CERTDIR', value: '')
+      ]
+    ),
+    containerTemplate(
+      name: 'helm',
+      image: 'alpine/helm:3.13.0',
+      command: 'cat',
+      ttyEnabled: true
+    ),
+    containerTemplate(
+      name: 'dind-daemon',
+      image: 'docker:20.10.8-dind',
+      privileged: true,
+      args: '--host tcp://0.0.0.0:2375 --host unix:///var/run/docker.sock',
+      volumeMounts: [
+        [mountPath: '/var/run/docker.sock', name: 'docker-socket']
+      ],
+      envVars: [
+        envVar(key: 'DOCKER_HOST', value: 'tcp://localhost:2375'),
+        envVar(key: 'DOCKER_TLS_CERTDIR', value: '')
+      ]
+    )
+  ],
+  volumes: [
+    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+    emptyDirVolume(mountPath: '/var/lib/docker', memory: false)
+  ]
+)  {
     node('jenkins-agent') {
       properties([
         buildDiscarder(logRotator(numToKeepStr: '5')),
