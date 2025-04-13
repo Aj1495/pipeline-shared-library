@@ -22,7 +22,12 @@ def call(String serviceName, String branchName) {
             helm create ${serviceName}
             sed -i "s|tag:.*|tag: \\"${env.BUILD_NUMBER}\\"|" ${serviceName}/values.yaml
             sed -i "s|repository:.*|repository: \\"${DOCKER_USER}/${serviceName}\\"|" ${serviceName}/values.yaml
-            sed -i 's/ingress:\\n  enabled: false\\n  className: ""\\n  annotations: {}/ingress:\\n  enabled: true\\n  annotations:\\n    kubernetes.io\\/ingress.class: "alb"\\n    alb.ingress.kubernetes.io\\/scheme: internet-facing\\n    alb.ingress.kubernetes.io\\/healthcheck-path: "node-app"/' ${serviceName}/values.yaml
+            sed -i 's|\\(ingress:\\n  enabled:\\) false|\\1 true|' ${serviceName}/values.yaml
+            sed -i 's|annotations: {}|annotations:\\n    kubernetes.io/ingress.class: "alb"\\n    alb.ingress.kubernetes.io/scheme: "internet-facing"\\n    alb.ingress.kubernetes.io/healthcheck-path: "/node-app"|' ${serviceName}/values.yaml
+            sed -i 's|path: /|path: /node-app|' ${serviceName}/values.yaml
+            sed -i 's|pathType: ImplementationSpecific|pathType: Prefix|' ${serviceName}/values.yaml
+            sed -i 's|host: chart-example.local|host: "${ALB_DNS}"|' ${serviceName}/values.yaml
+            sed -i 's|port: 80|port: 3000|' ${serviceName}/values.yaml
             #Additional commands for templating or customizing values.yaml
           """
         } catch (Exception e) {
