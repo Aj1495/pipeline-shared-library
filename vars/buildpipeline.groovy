@@ -73,7 +73,9 @@ def call(String masterBuild) {
       }
 
       stage('Helm Create Manifests') {
-        createHelmManifests(SERVICE_NAME, git_app_branch)
+        container('helm') {
+          createHelmManifests(SERVICE_NAME, git_app_branch)
+        }       
       }
 
       stage('Push Kubernetes Manifests') {
