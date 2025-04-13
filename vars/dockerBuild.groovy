@@ -13,6 +13,10 @@ def call(String serviceName, String branchName) {
             echo "Logging into Docker Registry..."
             docker login -u \$DOCKER_USER -p \$DOCKER_PASS
           """
+
+          echo "Checking Docker daemon status..."
+          sh "docker info"
+          
           if (branchName in ["staging", "preprod", "production", "master"]) {
             echo "Building Docker image for production like environment ... "
             sh "docker build -t ${serviceName} ./app"
