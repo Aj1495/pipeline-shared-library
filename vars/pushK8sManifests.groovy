@@ -15,14 +15,16 @@ def call(String serviceName, String branchName) {
             rm -rf k8s-manifests-repo
             git clone https://\$GIT_USER:\$GIT_TOKEN@github.com/skswami91/k8s-manifests-2025.git k8s-manifests-repo
             cp -r helm_charts/${serviceName} k8s-manifests-repo/${serviceName}
-
             cd k8s-manifests-repo
             git config --global user.email skswami91@gmail.com
             git config --global user.name skswami91
+            git config credential.helper store
+            echo "https://\$GIT_USER:\$GIT_TOKEN@github.com" > ~/.git-credentials
+    
             git add .
             git commit -m "Updating manifests for ${serviceName} - build #${env.BUILD_NUMBER}"
-            git remote set-url origin https://\$GIT_USER:\$GIT_TOKEN@github.com/skswami91/k8s-manifests-2025.git
-            git push origin main
+            git push https://github.com/skswami91/k8s-manifests-2025.git main
+
           """
         } catch (Exception e) {
           currentBuild.result = 'FAILURE'
