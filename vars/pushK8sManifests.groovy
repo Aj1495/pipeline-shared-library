@@ -19,8 +19,8 @@ def call(String serviceName, String branchName) {
               cp -r helm_charts/${serviceName} k8s-manifests-repo/${serviceName}
 
               cd k8s-manifests-repo
-              git config --global user.email "skswami91@gmail.com"
-              git config --global user.name "skswami91"
+              git config --global user.email skswami91@gmail.com
+              git config --global user.name skswami91
               git add .
               git commit -m "Updating manifests for ${serviceName} - build #${env.BUILD_NUMBER}"
               git push origin main
