@@ -6,10 +6,28 @@ def call(String masterBuild) {
   podTemplate(
     label: 'jenkins-agent',
     containers: [
-      containerTemplate(name: 'docker', image: 'docker:20.10.8', command: 'cat', ttyEnabled: true, privileged: true)
+      containerTemplate(
+        name: 'docker',
+        image: 'docker:20.10.8',
+        command: 'cat',
+        ttyEnabled: true,
+        envVars: [
+          envVar(key: 'DOCKER_HOST', value: 'tcp://localhost:2375'),
+          envVar(key: 'DOCKER_TLS_CERTDIR', value: '')
+        ]
+      ),
+      containerTemplate(
+        name: 'dind-daemon',
+        image: 'docker:20.10.8-dind',
+        privileged: true,
+        args: '--host tcp://0.0.0.0:2375 --host unix:///var/run/docker.sock',
+        envVars: [
+          envVar(key: 'DOCKER_TLS_CERTDIR', value: '')
+        ]
+      )
     ],
     volumes: [
-      hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
+      emptyDirVolume(mountPath: '/var/lib/docker', memory: false)
     ]
   ) {
     node('jenkins-agent') {
