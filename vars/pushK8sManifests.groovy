@@ -18,12 +18,11 @@ def call(String serviceName, String branchName) {
             cd k8s-manifests-repo
             git config --global user.email skswami91@gmail.com
             git config --global user.name skswami91
-            git config credential.helper store
-            echo "https://\$GIT_USER:\$GIT_TOKEN@github.com" > ~/.git-credentials
-    
+            git remote set-url origin https://\$GIT_USER:\$GIT_TOKEN@github.com/skswami91/k8s-manifests-2025.git 
+
             git add .
             git commit -m "Updating manifests for ${serviceName} - build #${env.BUILD_NUMBER}"
-            git push https://github.com/skswami91/k8s-manifests-2025.git main
+            git push origin main
 
           """
         } catch (Exception e) {
