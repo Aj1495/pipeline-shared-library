@@ -8,7 +8,7 @@ def call(String serviceName, String branchName) {
           mkdir helm_charts
           cd helm_charts
           helm create ${serviceName}
-          sed -i "s/tag:.*|tag: \\"${env.BUILD_NUMBER}\\"|" ${serviceName}/values.yaml
+          sed -i "s|tag:.*|tag: \\"${env.BUILD_NUMBER}\\"|" ${serviceName}/values.yaml
           #Additional commands for templating or customizing values.yaml
         """
       } catch (Exception e) {
