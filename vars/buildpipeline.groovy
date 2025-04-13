@@ -6,7 +6,7 @@ def call(String masterBuild) {
   podTemplate(
     label: 'jenkins-agent',
     containers: [
-      containerTemplate(name: 'docker', image: 'docker:20.10.8', command: 'cat', ttyEnabled: true)
+      containerTemplate(name: 'docker', image: 'docker:20.10.8', command: 'cat', ttyEnabled: true, privileged: true)
     ],
     volumes: [
       hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
