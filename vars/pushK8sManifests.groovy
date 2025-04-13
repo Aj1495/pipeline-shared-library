@@ -21,6 +21,7 @@ def call(String serviceName, String branchName) {
             git config --global user.name skswami91
             git add .
             git commit -m "Updating manifests for ${serviceName} - build #${env.BUILD_NUMBER}"
+            git remote set-url origin https://\$GIT_USER:\$GIT_TOKEN@github.com/skswami91/k8s-manifests-2025.git
             git push origin main
           """
         } catch (Exception e) {
