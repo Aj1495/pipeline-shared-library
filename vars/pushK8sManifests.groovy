@@ -12,7 +12,7 @@ def call(String serviceName, String branchName) {
           sh """ 
             echo "Preparing to push Helm/K8s Manifests to separate repo ... "
             git config user.email "skswami91@gmail.com"
-            git config user.name "jenkins"
+            git config user.name "skswami91"
 
             #Example: clone your separate manifests repo
             rm -rf k8s-manifests-repo
